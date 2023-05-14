@@ -9,10 +9,8 @@ FRAME_THICKNESS = 3
 FONT_THICKNESS = 2 
 MODEL = "cnn" 
 video = cv2.VideoCapture(0) 
-print("loading known faces")
 known_faces = [] 
 known_names = [] 
-
 print(dlib.DLIB_USE_CUDA) 
 for name in os.listdir(KNOWN_FACES_DIR):
     for filename in os.listdir(f"{KNOWN_FACES_DIR}/{name}"):
@@ -22,7 +20,6 @@ for name in os.listdir(KNOWN_FACES_DIR):
         known_names.append(name)
 
 
-print("processing unknown faces")
 while True:
     ret, image = video.read() 
     locations = face_recognition.face_locations(image, model=MODEL) 
@@ -32,7 +29,7 @@ while True:
         match = None
         if True in results: 
             match = known_names[results.index(True)] 
-            print(f"Match found: {match}")
+            print(f"Se parece a: {match}")
 
             top_left = (face_location[3], face_location[0])
             bottom_right = (face_location[1], face_location[2])
@@ -43,7 +40,7 @@ while True:
             cv2.rectangle(image, top_left, bottom_right, color, cv2.FILLED)
             cv2.putText(image, match, (face_location[3]+10, face_location[2]+15), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (200, 200, 200), FONT_THICKNESS)
 
-    cv2.imshow("webcam images", image) 
+    cv2.imshow("webcam", image) 
     if cv2.waitKey(1) & 0xFF == ord("q"):
         break
 
